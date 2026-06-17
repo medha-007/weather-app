@@ -1,263 +1,336 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged} from "firebase/auth";
 import { auth } from "./firebase";
 
-import { useEffect } from "react";
+import {
+  onAuthStateChanged,
+} from "firebase/auth";
+
+import {
+  fetchWeatherByCity,
+  fetchWeatherByCoords,
+  saveLocationToDatabase,
+  getSavedLocations,
+  getRecentSearches,
+} from "./services/weatherService";
+
+import {
+  loginUser,
+  logoutUser,
+} from "./services/authService";
+
+import {
+  getCurrentPosition,
+} from "./services/locationService";
 
 export default function App() {
-  const [showSearchPopup, setShowSearchPopup] = useState(false);
-  const [showSidebar, setShowSidebar] = useState(false);
-  const [city, setCity] = useState("");
-  const [weather, setWeather] = useState(null);
-  const provider = new GoogleAuthProvider();
-  const [user, setUser] = useState(null);
 
-  const [recentSearches, setRecentSearches] = useState([]);
-  const [savedLocations, setSavedLocations] = useState([]);
+  const [showSearchPopup, setShowSearchPopup] =
+    useState(false);
 
-  provider.setCustomParameters({
-    prompt: "select_account",
-  });
+  const [showSidebar, setShowSidebar] =
+    useState(false);
 
+  const [city, setCity] =
+    useState("");
 
-async function login() {
-  try {
-    const result = await signInWithPopup(auth, provider);
-    const loggedInUser = result.user;
-    setUser(loggedInUser);
-    const response = await fetch("http://localhost:3000/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        uid: loggedInUser.uid,
-        name: loggedInUser.displayName,
-        email: loggedInUser.email,
-      }),
-    });
-    const savedUser = await response.json();
-    console.log(savedUser);
-  } catch (err) {
-    console.error("LOGIN ERROR:", err);
-  }
-}
+  const [weather, setWeather] =
+    useState(null);
 
-const getWeather = async () => {
-  if (!city.trim()) return;
+  const [user, setUser] =
+    useState(null);
 
-  try {
-    const res = await fetch(
-      `http://localhost:3000/weather?city=${city}`
-    );
+  const [currentSavedIndex, setCurrentSavedIndex] =
+    useState(0);
 
-    const data = await res.json();
+  const [recentSearches, setRecentSearches] =
+    useState([]);
 
-    setWeather(data);
-  } catch (err) {
-    console.error(err);
-    alert("Something went wrong");
-  }
-};
+  const [savedLocations, setSavedLocations] =
+    useState([]);
 
-const searchCity = async (cityName) => {
-  if (!cityName?.trim()) return;
+  async function login() {
 
-  try {
-    const res = await fetch(
-      `http://localhost:3000/weather?city=${cityName}`
-    );
-
-    const data = await res.json();
-    setWeather(data);
-
-    // optional: keep input in sync
-    setCity(cityName);
-
-  } catch (err) {
-    console.error(err);
-    alert("Something went wrong");
-  }
-};
-
-const getLocation = () => {
-  navigator.geolocation.getCurrentPosition(
-    async (position) => {
-      try {
-        const lat = position.coords.latitude;
-        const lon = position.coords.longitude;
-
-        const res = await fetch(
-          `http://localhost:3000/weather?lat=${lat}&lon=${lon}`
-        );
-
-        const data = await res.json();
-        setWeather(data);
-      } catch (err) {
-        console.error(err);
-        alert("Something went wrong");
-      }
-    },
-    (error) => {
-      console.error(error);
-      alert("Unable to get location");
-    }
-  );
-};
-
-async function logout() {
-  try {
-
-    await signOut(auth);
-
-    setUser(null);
-
-    console.log("Logged out");
-
-  } catch (err) {
-
-    console.error(err);
-
-  }
-}
-
-async function saveLocation() {
-  if (!weather || !user) return;
-
-  const cleanCity = weather.city; // must come from backend API
-
-  await fetch("http://localhost:3000/saved", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      uid: user.uid,
-      city: cleanCity,
-    }),
-  });
-
-  alert("Saved!");
-}
-
-
-async function checkAlerts() {
-
-  if (!user) return;
-
-  const savedRes = await fetch(
-    `http://localhost:3000/get-saved-locations?uid=${user.uid}`
-  );
-
-  const locations = await savedRes.json();
-
-  for (const location of locations) {
-
-    const weatherRes = await fetch(
-      `http://localhost:3000/weather?city=${location.city}`
-    );
-
-    const weather = await weatherRes.json();
-
-    const rain =
-      weather.forecast.daily
-        .precipitation_probability_max?.[0];
-
-    const wind =
-      weather.forecast.daily
-        .wind_speed_10m_max?.[0];
-
-    const aqi =
-      weather.airQuality.aqi;
-
-    if (
-      rain > 80 ||
-      wind > 50 ||
-      aqi > 150
-    ) {
-
-      if (
-        Notification.permission === "granted"
-      ) {
-
-        new Notification(
-          `Weather Alert: ${location.city}`,
-          {
-            body:
-              `Rain ${rain}% | Wind ${wind} km/h | AQI ${aqi}`,
-          }
-        );
-
-      }
-
-    }
-
-  }
-
-}
-
-
-useEffect(() => {
-
-  const unsubscribe = onAuthStateChanged(
-    auth,
-    (firebaseUser) => {
-
-      setUser(firebaseUser);
-
-    }
-  );
-
-  return unsubscribe;
-}, []);
-
-useEffect(() => {
-
-  Notification.requestPermission();
-
-}, []);
-
-useEffect(() => {
-
-  if (!user) return;
-
-  checkAlerts();
-
-  const interval =
-    setInterval(checkAlerts, 300000);
-
-  return () =>
-    clearInterval(interval);
-
-}, [user]);
-
-
-useEffect(() => {
-  getLocation();
-}, []);
-
-useEffect(() => {
-  if (!user) return;
-
-  const fetchData = async () => {
     try {
-      const savedRes = await fetch(
-        `http://localhost:3000/get-saved-locations?uid=${user.uid}`
-      );
-      const saved = await savedRes.json();
-      setSavedLocations(saved);
 
-      const recentRes = await fetch(
-        `http://localhost:3000/recent-searches`
-      );
-      const recent = await recentRes.json();
-      setRecentSearches(recent);
+      const user =
+        await loginUser();
+
+      setUser(user);
+
     } catch (err) {
-      console.error(err);
+
+      console.error(
+        "LOGIN ERROR:",
+        err
+      );
+
     }
+
+  }
+
+  async function logout() {
+
+    try {
+
+      await logoutUser();
+
+      setUser(null);
+
+      console.log("Logged out");
+
+    } catch (err) {
+
+      console.error(err);
+
+    }
+
+  }
+
+  const getWeather = async () => {
+
+    if (!city.trim()) return;
+
+    try {
+
+      const data =
+        await fetchWeatherByCity(city);
+
+      setWeather(data);
+
+    } catch (err) {
+
+      console.error(err);
+
+      alert(
+        "Something went wrong"
+      );
+
+    }
+
   };
 
-  fetchData();
-}, [user]);
+  const searchCity = async (
+    cityName
+  ) => {
+
+    if (!cityName?.trim()) return;
+
+    try {
+
+      const data =
+        await fetchWeatherByCity(
+          cityName
+        );
+
+      setWeather(data);
+
+      setCity(cityName);
+
+    } catch (err) {
+
+      console.error(err);
+
+      alert(
+        "Something went wrong"
+      );
+
+    }
+
+  };
+
+  const getLocation = async () => {
+
+    try {
+
+      const position =
+        await getCurrentPosition();
+
+      const lat =
+        position.coords.latitude;
+
+      const lon =
+        position.coords.longitude;
+
+      const data =
+        await fetchWeatherByCoords(
+          lat,
+          lon
+        );
+
+      setWeather(data);
+
+    } catch (err) {
+
+      console.error(err);
+
+      alert(
+        "Unable to get location"
+      );
+
+    }
+
+  };
+
+  async function saveLocation() {
+
+    if (!weather || !user)
+      return;
+
+    try {
+
+      await saveLocationToDatabase(
+        user.uid,
+        weather.city
+      );
+
+      alert("Saved!");
+
+    } catch (err) {
+
+      console.error(err);
+
+    }
+
+  }
+
+  async function checkAlerts() {
+
+    if (!user) return;
+
+    const locations =
+      await getSavedLocations(
+        user.uid
+      );
+
+    for (const location of locations) {
+
+      const weather =
+        await fetchWeatherByCity(
+          location.city
+        );
+
+      const rain =
+        weather.forecast.daily
+          .precipitation_probability_max?.[0];
+
+      const wind =
+        weather.forecast.daily
+          .wind_speed_10m_max?.[0];
+
+      const aqi =
+        weather.airQuality.aqi;
+
+      if (
+        rain > 80 ||
+        wind > 50 ||
+        aqi > 150
+      ) {
+
+        if (
+          Notification.permission ===
+          "granted"
+        ) {
+
+          new Notification(
+            `Weather Alert: ${location.city}`,
+            {
+              body:
+                `Rain ${rain}% | Wind ${wind} km/h | AQI ${aqi}`,
+            }
+          );
+
+        }
+
+      }
+
+    }
+
+  }
+
+  useEffect(() => {
+
+    const unsubscribe =
+      onAuthStateChanged(
+        auth,
+        (firebaseUser) => {
+
+          setUser(firebaseUser);
+
+        }
+      );
+
+    return unsubscribe;
+
+  }, []);
+
+  useEffect(() => {
+
+    Notification.requestPermission();
+
+  }, []);
+
+  useEffect(() => {
+
+    if (!user) return;
+
+    checkAlerts();
+
+    const interval =
+      setInterval(
+        checkAlerts,
+        300000
+      );
+
+    return () =>
+      clearInterval(
+        interval
+      );
+
+  }, [user]);
+
+  useEffect(() => {
+
+    getLocation();
+
+  }, []);
+
+  useEffect(() => {
+
+    if (!user) return;
+
+    const fetchData =
+      async () => {
+
+        try {
+
+          const saved =
+            await getSavedLocations(
+              user.uid
+            );
+
+          setSavedLocations(
+            saved
+          );
+
+          const recent =
+            await getRecentSearches();
+
+          setRecentSearches(
+            recent
+          );
+
+        } catch (err) {
+
+          console.error(err);
+
+        }
+
+      };
+
+    fetchData();
+
+  }, [user]);
 
 return (
   <div className="app">
