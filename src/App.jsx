@@ -5,7 +5,7 @@ import { getSavedLocations } from "./services/weatherService";
 import { getCurrentPosition } from "./services/locationService";
 import Header from "./components/header/Header";
 import Dashboard from "./components/dashboard/Dashboard";
-
+//
 export default function App() {
   const [user, setUser] = useState(null);
   const [savedWeatherList, setSavedWeatherList] = useState([]);
