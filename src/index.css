@@ -1,0 +1,345 @@
+:root {
+  --text: #6b6375;
+  --text-h: #08060d;
+  --bg: #fff;
+  --border: #e5e4e7;
+  --code-bg: #f4f3ec;
+  --accent: #aa3bff;
+  --accent-bg: rgba(170, 59, 255, 0.1);
+  --accent-border: rgba(170, 59, 255, 0.5);
+  --social-bg: rgba(244, 243, 236, 0.5);
+  --shadow:
+    rgba(0, 0, 0, 0.1) 0 10px 15px -3px,
+    rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.18px;
+  color-scheme: light dark;
+
+  color: var(--text);
+  background: var(--bg);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* responsive font size */
+@media (max-width: 1024px) {
+  :root {
+    font-size: 16px;
+  }
+}
+
+/* dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #9ca3af;
+    --text-h: #f3f4f6;
+    --bg: #16171d;
+    --border: #2e303a;
+    --code-bg: #1f2028;
+    --accent: #c084fc;
+    --accent-bg: rgba(192, 132, 252, 0.15);
+    --accent-border: rgba(192, 132, 252, 0.5);
+    --social-bg: rgba(47, 48, 58, 0.5);
+    --shadow:
+      rgba(0, 0, 0, 0.4) 0 10px 15px -3px,
+      rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+  }
+}
+
+/* RESET */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg);
+}
+
+/* main app container */
+#root {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+
+  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+
+  box-sizing: border-box;
+}
+
+/* headings */
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+h1 {
+  font-size: 56px;
+  letter-spacing: -1.68px;
+  margin: 32px 0;
+}
+
+@media (max-width: 1024px) {
+  h1 {
+    font-size: 36px;
+    margin: 20px 0;
+  }
+}
+
+h2 {
+  font-size: 24px;
+  line-height: 118%;
+  letter-spacing: -0.24px;
+  margin: 0 0 8px;
+}
+
+@media (max-width: 1024px) {
+  h2 {
+    font-size: 20px;
+  }
+}
+
+p {
+  margin: 0;
+}
+
+/* code styling */
+code,
+.counter {
+  font-family: var(--mono);
+  display: inline-flex;
+  border-radius: 4px;
+  color: var(--text-h);
+}
+
+code {
+  font-size: 15px;
+  line-height: 135%;
+  padding: 4px 8px;
+  background: var(--code-bg);
+}
+
+/* app layout */
+.app {
+  padding: 20px;
+  text-align: left;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* topbar */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+/* input + buttons */
+input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: inherit;
+}
+
+button {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--social-bg);
+  cursor: pointer;
+}
+
+/* grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+/* cards */
+.card {
+  padding: 15px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--social-bg);
+}
+
+.card.wide {
+  grid-column: span 3;
+}
+
+/* text styles */
+.big {
+  font-size: 34px;
+  font-weight: 600;
+  margin: 10px 0;
+}
+
+.meta {
+  font-size: 14px;
+  opacity: 0.8;
+  margin: 3px 0;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 14px;
+}
+
+.scroll {
+  max-height: 200px;
+  overflow-y: auto;
+}
+/* prevent horizontal scroll everywhere */
+html, body {
+  overflow-x: hidden;
+}
+
+/* safety clamp */
+* {
+  box-sizing: border-box;
+}
+
+/* overlay (reuse existing if you already have it) */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+}
+
+/* sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: -280px;
+  width: 280px;
+  height: 100vh;
+  background: #0b0b0b;
+  color: white;
+  padding: 20px;
+  z-index: 1000;
+  transition: right 0.3s ease;
+}
+
+/* open state */
+.sidebar.open {
+  right: 0;
+}
+
+/* sidebar title */
+.sidebar h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.search-popup {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  width: 260px;
+  background: #0b0b0b;
+  border: 1px solid #222;
+  border-radius: 12px;
+  padding: 12px;
+  z-index: 1001;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.search-popup input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: transparent;
+  color: white;
+}
+
+.search-popup button {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: #111;
+  color: white;
+}
+
+.dropdown {
+  margin: 15px 0;
+  color: white;
+}
+
+.dropdown summary {
+  cursor: pointer;
+  padding: 8px;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 8px;
+}
+
+.dropdown ul {
+  list-style: none;
+  padding: 8px;
+  margin: 0;
+  background: #0b0b0b;
+  border: 1px solid #222;
+  border-top: none;
+}
+
+.dropdown li {
+  padding: 6px 0;
+  font-size: 13px;
+  color: #aaa;
+}
+
+.dropdown li:hover {
+  background: #222;
+}
+
+
+.search-popup {
+  position: fixed;
+  top: 70px;
+  right: 20px;
+  background: #111;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #333;
+  z-index: 2000;
+}
+
+.popup-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.popup-buttons button {
+  background: #222;
+  color: white;
+}
