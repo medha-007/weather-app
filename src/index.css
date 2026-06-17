@@ -140,206 +140,65 @@ code {
   width: 100%;
 }
 
-/* topbar */
-.topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
 
-.title {
-  font-size: 22px;
-  font-weight: 600;
-}
-
-/* input + buttons */
-input {
-  flex: 1;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: inherit;
-}
-
-button {
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--social-bg);
-  cursor: pointer;
-}
-
-/* grid */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-}
-
-/* cards */
-.card {
-  padding: 15px;
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  background: var(--social-bg);
-}
-
-.card.wide {
-  grid-column: span 3;
-}
-
-/* text styles */
-.big {
-  font-size: 34px;
-  font-weight: 600;
-  margin: 10px 0;
-}
-
-.meta {
-  font-size: 14px;
-  opacity: 0.8;
-  margin: 3px 0;
-}
-
-.row {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
-  font-size: 14px;
-}
-
-.scroll {
-  max-height: 200px;
-  overflow-y: auto;
-}
-/* prevent horizontal scroll everywhere */
-html, body {
-  overflow-x: hidden;
-}
-
-/* safety clamp */
-* {
+.dashboard-container {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 16px;
   box-sizing: border-box;
 }
 
-/* overlay (reuse existing if you already have it) */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 999;
-}
-
-/* sidebar */
-.sidebar {
-  position: fixed;
-  top: 0;
-  right: -280px;
-  width: 280px;
-  height: 100vh;
-  background: #0b0b0b;
-  color: white;
-  padding: 20px;
-  z-index: 1000;
-  transition: right 0.3s ease;
-}
-
-/* open state */
-.sidebar.open {
-  right: 0;
-}
-
-/* sidebar title */
-.sidebar h2 {
-  margin: 0;
-  font-size: 18px;
-}
-
-.search-popup {
-  position: fixed;
-  top: 80px;
-  right: 20px;
-  width: 260px;
-  background: #0b0b0b;
-  border: 1px solid #222;
-  border-radius: 12px;
-  padding: 12px;
-  z-index: 1001;
-
+.switcher-zone {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 32px;
 }
 
-.search-popup input {
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #333;
-  background: transparent;
-  color: white;
+.hero-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  border-radius: 12px;
+  padding: 24px;
+  width: 100%;
+  max-width: 400px;
+  text-align: left; /* Aligned left like your diagram layout */
+  box-sizing: border-box;
 }
 
-.search-popup button {
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid #333;
-  background: #111;
-  color: white;
+.hero-subinfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  font-size: 15px;
+  color: var(--text);
 }
 
-.dropdown {
-  margin: 15px 0;
-  color: white;
+.condition-text {
+  color: var(--accent) !important;
+  font-weight: 500;
 }
 
-.dropdown summary {
+.carousel-btn {
+  background: var(--social-bg);
+  border: 1px solid var(--border);
+  color: var(--text-h);
+  font-size: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
   cursor: pointer;
-  padding: 8px;
-  background: #111;
-  border: 1px solid #333;
-  border-radius: 8px;
-}
-
-.dropdown ul {
-  list-style: none;
-  padding: 8px;
-  margin: 0;
-  background: #0b0b0b;
-  border: 1px solid #222;
-  border-top: none;
-}
-
-.dropdown li {
-  padding: 6px 0;
-  font-size: 13px;
-  color: #aaa;
-}
-
-.dropdown li:hover {
-  background: #222;
-}
-
-
-.search-popup {
-  position: fixed;
-  top: 70px;
-  right: 20px;
-  background: #111;
-  padding: 12px;
-  border-radius: 12px;
-  border: 1px solid #333;
-  z-index: 2000;
-}
-
-.popup-buttons {
   display: flex;
-  gap: 8px;
-  margin-top: 10px;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
 }
 
-.popup-buttons button {
-  background: #222;
-  color: white;
+.carousel-btn:hover {
+  background: var(--accent-bg);
+  border-color: var(--accent-border);
 }

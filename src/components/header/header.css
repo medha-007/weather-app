@@ -1,0 +1,56 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 15px 25px;
+  /* Use index.css theme background and border tokens */
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+
+  font-family: var(--sans);
+}
+
+/* LEFT */
+.header-left .logo {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  /* Ensure logo matches headings color */
+  color: var(--text-h);
+}
+
+/* CENTER (empty for now, reserved for future search bar if needed) */
+.header-center {
+  flex: 1;
+}
+
+/* RIGHT */
+.header-right {
+  display: flex;
+  gap: 10px;
+}
+
+.header-btn {
+  padding: 8px 12px;
+  border-radius: 10px;
+
+  /* Match index.css card borders and light code/social backgrounds */
+  border: 1px solid var(--border);
+  background: var(--social-bg);
+  color: var(--text-h);
+
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.15s ease;
+}
+
+.header-btn:hover {
+  /* Give it a subtle splash of your accent color on hover */
+  background: var(--accent-bg);
+  border-color: var(--accent-border);
+}
+
+.header-btn:active {
+  transform: scale(0.97);
+}

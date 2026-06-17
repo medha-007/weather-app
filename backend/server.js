@@ -81,13 +81,10 @@ app.get("/weather", weatherLimiter, async (req, res) => {
     const cacheKey = req.query.city ? `city-${req.query.city}` : `gps-${lat}-${lon}`;
 
     if (cache[cacheKey] && Date.now() - cache[cacheKey].timestamp < 10 * 60 * 1000) {
-        console.log("CACHE HIT");
         return res.json(cache[cacheKey].data);
     }
-
-    console.log("CACHE MISS");
     const weatherRes = await fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,daylight_duration,sunshine_duration,uv_index_max,uv_index_clear_sky_max,rain_sum,showers_sum,precipitation_sum,precipitation_hours,precipitation_probability_max,wind_speed_10m_max,wind_direction_10m_dominant&hourly=temperature_2m,relative_humidity_2m,precipitation_probability,apparent_temperature,precipitation,rain,showers,wind_direction_10m,wind_speed_10m&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,rain,showers,wind_direction_10m,wind_speed_10m,cloud_cover&timezone=auto`
+      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,daylight_duration,sunshine_duration,uv_index_max,uv_index_clear_sky_max,rain_sum,showers_sum,precipitation_sum,precipitation_hours,precipitation_probability_max,wind_speed_10m_max,wind_direction_10m_dominant&hourly=temperature_2m,cloud_cover,relative_humidity_2m,precipitation_probability,apparent_temperature,precipitation,rain,showers,wind_direction_10m,wind_speed_10m&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,rain,showers,wind_direction_10m,wind_speed_10m,cloud_cover&timezone=auto`
     );
 
     const weatherData = await weatherRes.json();
