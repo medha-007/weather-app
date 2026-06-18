@@ -116,3 +116,25 @@
   background: var(--accent);
   color: white;
 }
+
+.account-list {
+  margin-top: 8px;
+  padding: 8px;
+
+  border: 1px solid var(--border);
+  border-radius: 8px;
+
+  max-height: 150px;
+  overflow-y: auto;
+
+  font-size: 14px;
+}
+
+.account-list div {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.account-list div:last-child {
+  border-bottom: none;
+}

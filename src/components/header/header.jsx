@@ -18,6 +18,7 @@ export default function Header({
   saveIcon,
   onToggleSave,
   recentSearches,
+  savedLocations,
 }){
   const [user, setUser] = useState(null);
 
@@ -27,6 +28,8 @@ export default function Header({
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
 
+  const [showSavedList, setShowSavedList] = useState(false);
+const [showRecentList, setShowRecentList] = useState(false);
   // AUTH
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
@@ -114,7 +117,6 @@ export default function Header({
                 onUseCurrentLocation={() => {
                   onUseCurrentLocation();
                   setShowSearch(false);
-                    recentSearches={recentSearches}
                 }}
                 onClose={() => setShowSearch(false)}
               />
@@ -157,6 +159,40 @@ export default function Header({
                   <p className="account-name">
                     {user.displayName || user.email}
                   </p>
+
+<button
+  className="account-action"
+  onClick={() => setShowSavedList((p) => !p)}
+>
+  Saved Locations
+</button>
+
+{showSavedList && (
+  <div className="account-list">
+    {savedLocations.slice(1).map((location) => (
+      <div key={location.city}>
+        {location.city}
+      </div>
+    ))}
+  </div>
+)}
+
+<button
+  className="account-action"
+  onClick={() => setShowRecentList((p) => !p)}
+>
+  Recent Searches
+</button>
+
+{showRecentList && (
+  <div className="account-list">
+{recentSearches.map((search) => (
+  <div key={search._id}>
+    {search.city}
+  </div>
+))}
+  </div>
+)}
 
                   <button
                     className="account-action"

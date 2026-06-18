@@ -193,12 +193,21 @@ const handleSearch = async (city) => {
     const data = await res.json();
 
 if (data && !data.error) {
+
   setRecentSearches((prev) => {
     const filtered = prev.filter(
-      (item) => item.toLowerCase() !== city.toLowerCase()
+      (item) =>
+        item.city?.toLowerCase() !==
+        data.city?.toLowerCase()
     );
 
-    return [city, ...filtered].slice(0, 5);
+    return [
+      {
+        _id: Date.now(),
+        city: data.city,
+      },
+      ...filtered,
+    ].slice(0, 5);
   });
 
   setSearchResult(data);
@@ -227,6 +236,26 @@ if (data && !data.error) {
     ? savedWeatherList[safeIndex]
     : null;
 
+
+useEffect(() => {
+  const loadRecentSearches = async () => {
+    try {
+      const res = await fetch(
+        "http://localhost:3000/recent-searches"
+      );
+
+      const data = await res.json();
+
+      setRecentSearches(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  loadRecentSearches();
+}, []);
+
+
   return (
     <div className="app-layout">
 <Header
@@ -236,6 +265,8 @@ if (data && !data.error) {
   saveIcon={getSaveIcon()}
   onToggleSave={handleToggleSave}
   recentSearches={recentSearches}
+  savedLocations={savedWeatherList}
+
 />
 
 {searchLoading && (

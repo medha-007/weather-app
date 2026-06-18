@@ -47,15 +47,15 @@ return (
 
     {recentSearches?.length > 0 && (
       <div className="recent-searches">
-        {recentSearches.map((city) => (
-          <button
-            key={city}
-            className="recent-chip"
-            onClick={() => setInput(city)}
-          >
-            {city}
-          </button>
-        ))}
+        {recentSearches.map((search) => (
+  <button
+    key={search._id}
+    className="recent-chip"
+    onClick={() => setInput(search.city)}
+  >
+    {search.city}
+  </button>
+))}
       </div>
     )}
 
