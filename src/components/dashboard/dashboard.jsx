@@ -6,7 +6,7 @@ export default function Dashboard({ currentLocation }) {
   const forecast = currentLocation?.forecast ?? {};
   const airQuality = currentLocation?.airQuality ?? {};
 
-  // SAFE ARRAY WRAPPER (critical for Open-Meteo responses)
+  // SAFE ARRAY WRAPPER
   const arr = (v) => (Array.isArray(v) ? v : []);
 
   const hourlyTime = arr(forecast?.hourly?.time);
@@ -16,6 +16,18 @@ export default function Dashboard({ currentLocation }) {
   const dailyTime = arr(forecast?.daily?.time);
   const dailyMax = arr(forecast?.daily?.temperature_2m_max);
   const dailyMin = arr(forecast?.daily?.temperature_2m_min);
+  const dailyPrecipProb = arr(
+    forecast?.daily?.precipitation_probability_max
+  );
+  const dailyPrecipSum = arr(
+    forecast?.daily?.precipitation_sum
+  );
+  const dailyUv = arr(
+    forecast?.daily?.uv_index_max
+  );
+  const dailyWindMax = arr(
+    forecast?.daily?.wind_speed_10m_max
+  );
 
   const getAqiStatus = (aqi) => {
     if (aqi == null) return "Unknown";
@@ -34,23 +46,36 @@ export default function Dashboard({ currentLocation }) {
   return (
     <div className="dashboard-stack">
 
-{/* 1. HOURLY FORECAST */}
+      {/* HOURLY FORECAST */}
       <div className="short-card">
         <h3>Hourly Forecast</h3>
+
         <div className="hourly-row">
-          {forecast.hourly.time.slice(0, 12).map((timeString, index) => {
-            const displayHour = new Date(timeString).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            return (
-              <div key={index} className="hourly-item">
-                <span className="time">{displayHour}</span>
-                <span className="temp">{forecast.hourly.temperature_2m[index]}°C</span>
-              </div>
-            );
-          })}
+          {hourlyTime.length > 0 ? (
+            hourlyTime.slice(0, 12).map((timeString, index) => {
+              const displayHour = new Date(
+                timeString
+              ).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              });
+
+              return (
+                <div key={index} className="hourly-item">
+                  <span className="time">{displayHour}</span>
+                  <span className="temp">
+                    {hourlyTemp[index] ?? "—"}°C
+                  </span>
+                </div>
+              );
+            })
+          ) : (
+            <p>No hourly forecast available.</p>
+          )}
         </div>
       </div>
 
-      {/* DAILY FORECAST */}
+      {/* WEEKLY FORECAST */}
       <div className="short-card">
         <h3>Weekly Forecast</h3>
 
@@ -69,14 +94,13 @@ export default function Dashboard({ currentLocation }) {
                 </span>
 
                 <span>
-                  🌧️{" "}
-                  {forecast?.daily?.precipitation_probability_max?.[i] ?? "—"}%
+                  🌧️ {dailyPrecipProb[i] ?? "—"}%
                 </span>
               </div>
             ))
           ) : (
             <p style={{ color: "red" }}>
-              Daily data missing (Open-Meteo response mismatch)
+              Daily forecast unavailable
             </p>
           )}
         </div>
@@ -85,19 +109,21 @@ export default function Dashboard({ currentLocation }) {
       {/* AQI */}
       <div className="short-card">
         <h3>AQI</h3>
-        <p className="large-stat">{airQuality?.aqi ?? "N/A"}</p>
+        <p className="large-stat">
+          {airQuality?.aqi ?? "N/A"}
+        </p>
         <p>{getAqiStatus(airQuality?.aqi)}</p>
       </div>
 
       {/* UV INDEX */}
       <div className="short-card">
         <h3>UV Index</h3>
+
         <p className="large-stat">
-          {forecast?.daily?.uv_index_max?.[0] ?? "N/A"}
+          {dailyUv[0] ?? "N/A"}
         </p>
-        <p>
-          {getUvLabel(forecast?.daily?.uv_index_max?.[0])}
-        </p>
+
+        <p>{getUvLabel(dailyUv[0])}</p>
       </div>
 
       {/* PRECIPITATION */}
@@ -108,14 +134,14 @@ export default function Dashboard({ currentLocation }) {
           <div>
             <span>Today</span>
             <strong>
-              {forecast?.daily?.precipitation_sum?.[0] ?? "—"} mm
+              {dailyPrecipSum[0] ?? "—"} mm
             </strong>
           </div>
 
           <div>
             <span>Probability</span>
             <strong>
-              {forecast?.daily?.precipitation_probability_max?.[0] ?? "—"}%
+              {dailyPrecipProb[0] ?? "—"}%
             </strong>
           </div>
         </div>
@@ -143,7 +169,7 @@ export default function Dashboard({ currentLocation }) {
           <div>
             <span>Max</span>
             <strong>
-              {forecast?.daily?.wind_speed_10m_max?.[0] ?? "—"} km/h
+              {dailyWindMax[0] ?? "—"} km/h
             </strong>
           </div>
         </div>
