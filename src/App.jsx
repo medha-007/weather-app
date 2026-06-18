@@ -5,14 +5,14 @@ import { getSavedLocations } from "./services/weatherService";
 import { getCurrentPosition } from "./services/locationService";
 import Header from "./components/header/Header";
 import Dashboard from "./components/dashboard/Dashboard";
-import Search from "./components/search/Search";
 
 export default function App() {
   const [user, setUser] = useState(null);
   const [savedWeatherList, setSavedWeatherList] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [activePopup, setActivePopup] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const [searchLoading, setSearchLoading] = useState(false);
 
   const [searchResult, setSearchResult] = useState(null);
 
@@ -104,28 +104,29 @@ export default function App() {
   };
 
   // SEARCH
-  const handleSearch = async (city) => {
-    try {
-      const res = await fetch(
-        `http://localhost:3000/weather?city=${encodeURIComponent(city)}`
-      );
+const handleSearch = async (city) => {
+  try {
+    setSearchLoading(true);
 
-      const data = await res.json();
+    const res = await fetch(
+      `http://localhost:3000/weather?city=${encodeURIComponent(city)}`
+    );
 
-      if (data && !data.error) {
-        setSearchResult(data);
-        setActivePopup(null);
-      }
-    } catch (err) {
-      console.error(err);
+    const data = await res.json();
+
+    if (data && !data.error) {
+      setSearchResult(data);
     }
-  };
-
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setSearchLoading(false);
+  }
+};
   // EXIT SEARCH MODE
   const handleReturnToCurrentLocation = () => {
     setSearchResult(null);
     setActiveIndex(0);
-    setActivePopup(null);
   };
 
   // SAFE CURRENT LOCATION
@@ -142,11 +143,11 @@ export default function App() {
 
   return (
     <div className="app-layout">
-      <Header
-        onSearchClick={() => setActivePopup("search")}
-        onSavedClick={() => setActivePopup("saved")}
-      />
-
+<Header
+  onSearch={handleSearch}
+  onUseCurrentLocation={handleReturnToCurrentLocation}
+  searchLoading={searchLoading}
+/>
       <main className="dashboard-container">
         {isLoading ? (
           <div className="location-loading">
@@ -185,11 +186,10 @@ export default function App() {
                       </span>
 
                       <p className="condition-text">
-                        {currentLocation?.forecast?.current
-                          ?.precipitation > 0
+                        {currentLocation?.forecast?.current?.precipitation > 0
                           ? "Rainy"
-                          : (currentLocation?.forecast?.current
-                              ?.cloud_cover ?? 0) > 50
+                          : (currentLocation?.forecast?.current?.cloud_cover ??
+                              0) > 50
                           ? "Cloudy"
                           : "Sunny"}
                       </p>
@@ -213,36 +213,6 @@ export default function App() {
           </>
         )}
       </main>
-
-      {/* MODAL */}
-      {activePopup && (
-        <div
-          className="simple-modal-overlay"
-          onClick={() => setActivePopup(null)}
-        >
-          <div
-            className="simple-modal-content"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {activePopup === "search" && (
-              <Search
-                onClose={() => setActivePopup(null)}
-                onSearch={handleSearch}
-                onUseCurrentLocation={
-                  handleReturnToCurrentLocation
-                }
-              />
-            )}
-
-            <button
-              className="close-btn"
-              onClick={() => setActivePopup(null)}
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

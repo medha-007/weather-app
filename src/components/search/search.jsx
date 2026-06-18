@@ -2,45 +2,58 @@ import { useState } from "react";
 import "./search.css";
 
 export default function Search({
-  onClose,
   onSearch,
   onUseCurrentLocation,
+    searchLoading,
 }) {
   const [input, setInput] = useState("");
 
   const handleSearchClick = () => {
     const trimmed = input.trim();
     if (!trimmed) return;
+
     onSearch(trimmed);
     setInput("");
   };
 
+  
+
   return (
     <div className="search-container">
-      <h2 className="search-title">🔍 Search Location</h2>
+      <div className="search-row">
 
-      <input
-        className="search-input"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        placeholder="Enter city name..."
-      />
+        <input
+          className="search-input"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Enter city..."
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleSearchClick();
+            }
+          }}
+        />
 
-      <div className="search-actions">
-        <button className="search-btn primary" onClick={handleSearchClick}>
-          Search
-        </button>
+        <div className="search-actions">
 
-        <button
-          className="search-btn secondary"
-          onClick={onUseCurrentLocation}
-        >
-          📍 Use Current Location
-        </button>
+  <button
+    className="search-btn"
+    onClick={handleSearchClick}
+    disabled={searchLoading}
+  >
+    {searchLoading ? "Loading..." : "🔍"}
+  </button>
 
-        <button className="search-btn ghost" onClick={onClose}>
-          Close
-        </button>
+  <button
+    className="search-btn"
+    onClick={onUseCurrentLocation}
+    disabled={searchLoading}
+  >
+    📍
+  </button>
+
+</div>
+
       </div>
     </div>
   );
