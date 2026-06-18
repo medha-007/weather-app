@@ -148,6 +148,12 @@ const handleSearch = async (city) => {
   onUseCurrentLocation={handleReturnToCurrentLocation}
   searchLoading={searchLoading}
 />
+
+{searchLoading && (
+  <div className="global-search-loading">
+    Searching weather...
+  </div>
+)}
       <main className="dashboard-container">
         {isLoading ? (
           <div className="location-loading">
@@ -156,11 +162,11 @@ const handleSearch = async (city) => {
         ) : (
           <>
             <section className="switcher-zone">
-              {!searchResult && (
-                <button className="carousel-btn" onClick={handlePrev}>
-                  ←
-                </button>
-              )}
+{!searchResult && savedWeatherList.length > 1 && (
+  <button className="carousel-btn" onClick={handlePrev}>
+    ←
+  </button>
+)}
 
               <div className="hero-card">
                 {currentLocation ? (
@@ -200,11 +206,11 @@ const handleSearch = async (city) => {
                 )}
               </div>
 
-              {!searchResult && (
-                <button className="carousel-btn" onClick={handleNext}>
-                  →
-                </button>
-              )}
+{!searchResult && savedWeatherList.length > 1 && (
+  <button className="carousel-btn" onClick={handleNext}>
+    →
+  </button>
+)}
             </section>
 
             {!isLoading && currentLocation && (

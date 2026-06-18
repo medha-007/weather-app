@@ -16,45 +16,37 @@ export default function Search({
     setInput("");
   };
 
-  
-
   return (
-    <div className="search-container">
-      <div className="search-row">
+  <div className="search-container">
+    <div className="search-row">
 
-        <input
-          className="search-input"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Enter city..."
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleSearchClick();
-            }
-          }}
-        />
+      <input
+        className="search-input"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        placeholder="Search for city..."
+        onKeyDown={(e) => {
+          if (e.key === "Enter") handleSearchClick();
+        }}
+      />
 
-        <div className="search-actions">
+      <button
+        className="search-icon-btn"
+        onClick={handleSearchClick}
+        disabled={searchLoading}
+      >
+        🔍︎
+      </button>
 
-  <button
-    className="search-btn"
-    onClick={handleSearchClick}
-    disabled={searchLoading}
-  >
-    {searchLoading ? "Loading..." : "🔍"}
-  </button>
+      <button
+        className="search-icon-btn"
+        onClick={onUseCurrentLocation}
+        disabled={searchLoading}
+      >
+        🏠︎
+      </button>
 
-  <button
-    className="search-btn"
-    onClick={onUseCurrentLocation}
-    disabled={searchLoading}
-  >
-    📍
-  </button>
-
-</div>
-
-      </div>
     </div>
-  );
+  </div>
+);
 }

@@ -1,3 +1,7 @@
+/* =========================
+   SEARCH OVERLAY (IF USED)
+========================= */
+
 .search-overlay {
   position: fixed;
   inset: 0;
@@ -11,116 +15,133 @@
   z-index: 2000;
 }
 
+/* =========================
+   MODAL (OPTIONAL WRAPPER)
+========================= */
+
 .search-modal {
   width: 420px;
 
   background: var(--bg);
-
   border: 1px solid var(--border);
-
   border-radius: 16px;
 
   padding: 24px;
 
   display: flex;
   flex-direction: column;
-
   gap: 16px;
 }
+
+/* =========================
+   SIMPLE MODAL (GLOBAL)
+========================= */
 
 .simple-modal-overlay {
   position: fixed;
   inset: 0;
+
   background: rgba(0, 0, 0, 0.5);
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   z-index: 9999;
 }
 
-.search-modal h2 {
-  margin: 0;
-}
-
 .simple-modal-content {
-  background: white;
+  background: var(--bg);
   padding: 20px;
+
   border-radius: 12px;
   width: 90%;
   max-width: 420px;
+
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
-.search-modal input {
-  width: 100%;
-
-  padding: 12px;
-
-  border: 1px solid var(--border);
-
-  border-radius: 10px;
-
-  box-sizing: border-box;
-}
-
-.search-actions {
-  display: flex;
-  gap: 12px;
-}
-
-.gps-btn,
-.search-btn {
-  flex: 1;
-
-  padding: 12px;
-
-  border: 1px solid var(--border);
-
-  border-radius: 10px;
-
-  background: var(--bg);
-
-  cursor: pointer;
-}
-
-.gps-btn:hover,
-.search-btn:hover {
-  background: var(--accent);
-  color: white;
-}
-
+/* =========================
+   MAIN SEARCH POPUP (HEADER STYLE)
+========================= */
 
 .search-container {
   position: absolute;
   top: 52px;
   right: 0;
 
-  width: 260px;
+  width: 320px;
 
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 12px;
 
-  padding: 16px;
+  padding: 12px;
 
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 
   z-index: 1000;
 }
 
-.search-title {
-  font-size: 18px;
-  margin: 0;
+/* ROW LAYOUT (NEW DESIGN) */
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+
+  padding: 6px;
+}
+
+/* INPUT */
+.search-input {
+  flex: 1;
+
+  border: none;
+  outline: none;
+
+  font-size: 14px;
+
+  background: transparent;
   color: var(--text-h);
 }
 
-.search-input {
-  padding: 10px 12px;
-  border-radius: 8px;
+/* ICON BUTTONS */
+.search-icon-btn {
+  width: 36px;
+  height: 36px;
+
+  border-radius: 10px;
   border: 1px solid var(--border);
-  outline: none;
-  font-size: 14px;
+
+  background: var(--bg);
+  color: var(--text-h);
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: 0.15s ease;
 }
+
+.search-icon-btn:hover {
+  background: var(--accent-bg);
+}
+
+.search-icon-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* =========================
+   OLD BUTTON SYSTEM (SAFE KEEP)
+   (only used if you still have legacy UI)
+========================= */
 
 .search-actions {
   display: flex;
@@ -131,6 +152,7 @@
 .search-btn {
   flex: 0;
   width: auto;
+
   padding: 8px 14px;
 
   border-radius: 10px;
@@ -149,6 +171,7 @@
   background: var(--accent-bg);
   border-color: var(--accent);
 }
+
 .search-btn.primary {
   background: var(--text-h);
   color: white;
@@ -162,21 +185,39 @@
   background: transparent;
 }
 
-.search-wrapper {
-  position: relative;
-}
-
-.search-actions button {
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-weight: 500;
-}
-
-.search-wrapper {
-  position: relative;
-}
+/* =========================
+   LOADING STATES
+========================= */
 
 .search-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.search-loading {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text);
+  opacity: 0.7;
+}
+
+.global-search-loading {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  padding: 10px 14px;
+
+  border-radius: 10px;
+
+  background: var(--bg);
+  border: 1px solid var(--border);
+
+  font-size: 13px;
+  color: var(--text-h);
+
+  z-index: 9999;
+
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
