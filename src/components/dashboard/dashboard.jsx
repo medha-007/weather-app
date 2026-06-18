@@ -9,9 +9,25 @@ export default function Dashboard({ currentLocation }) {
   // SAFE ARRAY WRAPPER
   const arr = (v) => (Array.isArray(v) ? v : []);
 
-  const hourlyTime = arr(forecast?.hourly?.time);
-  const hourlyTemp = arr(forecast?.hourly?.temperature_2m);
-  const hourlyRain = arr(forecast?.hourly?.precipitation);
+const hourlyTime = arr(forecast?.hourly?.time);
+const hourlyTemp = arr(forecast?.hourly?.temperature_2m);
+const hourlyRain = arr(forecast?.hourly?.precipitation);
+const hourlyCloud = arr(forecast?.hourly?.cloud_cover);
+
+const now = new Date();
+
+let startIndex = hourlyTime.findIndex(
+  (time) => new Date(time) >= now
+);
+
+if (startIndex < 0) {
+  startIndex = 0;
+}
+
+const next24Hours = hourlyTime.slice(
+  startIndex,
+  startIndex + 24
+);
 
   const dailyTime = arr(forecast?.daily?.time);
   const dailyMax = arr(forecast?.daily?.temperature_2m_max);
@@ -46,34 +62,59 @@ export default function Dashboard({ currentLocation }) {
   return (
     <div className="dashboard-stack">
 
-      {/* HOURLY FORECAST */}
-      <div className="short-card">
-        <h3>Hourly Forecast</h3>
+{/* HOURLY FORECAST */}
+<div className="short-card">
+  <h3>Hourly Forecast</h3>
 
-        <div className="hourly-row">
-          {hourlyTime.length > 0 ? (
-            hourlyTime.slice(0, 12).map((timeString, index) => {
-              const displayHour = new Date(
-                timeString
-              ).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              });
+  <div className="hourly-row">
+    {hourlyTime.length > 0 ? (
+next24Hours.map((timeString, displayIndex) => {
+  const actualIndex = startIndex + displayIndex;
+const displayHour =
+  displayIndex === 0
+    ? "Now"
+    : new Date(timeString).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
 
-              return (
-                <div key={index} className="hourly-item">
-                  <span className="time">{displayHour}</span>
-                  <span className="temp">
-                    {hourlyTemp[index] ?? "—"}°C
-                  </span>
-                </div>
-              );
-            })
-          ) : (
-            <p>No hourly forecast available.</p>
-          )}
-        </div>
-      </div>
+const hourCloud = hourlyCloud[actualIndex] ?? 0;
+const hourRain = hourlyRain[actualIndex] ?? 0;
+        let weatherEmoji = "☀️";
+
+        if (hourRain > 0) {
+          weatherEmoji = "🌧️";
+        } else if (hourCloud > 70) {
+          weatherEmoji = "☁️";
+        } else if (hourCloud > 20) {
+          weatherEmoji = "⛅";
+        }
+
+        return (
+          <div key={displayIndex} className="hourly-item">
+            <span className="time">{displayHour}</span>
+
+            <span
+              className="weather-icon"
+              style={{
+                fontSize: "16px",
+                margin: "2px 0",
+              }}
+            >
+              {weatherEmoji}
+            </span>
+
+            <span className="temp">
+              {hourlyTemp[actualIndex] ?? "—"}°C
+            </span>
+          </div>
+        );
+      })
+    ) : (
+      <p>No hourly forecast available.</p>
+    )}
+  </div>
+</div>
 
       {/* WEEKLY FORECAST */}
       <div className="short-card">
