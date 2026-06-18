@@ -59,6 +59,12 @@ const next24Hours = hourlyTime.slice(
     return "High";
   };
 
+
+const getDayName = (dateString) =>
+  new Date(dateString).toLocaleDateString("en-US", {
+    weekday: "short",
+  });
+
   return (
     <div className="dashboard-stack">
 
@@ -90,6 +96,7 @@ const hourRain = hourlyRain[actualIndex] ?? 0;
           weatherEmoji = "⛅";
         }
 
+      
         return (
           <div key={displayIndex} className="hourly-item">
             <span className="time">{displayHour}</span>
@@ -146,76 +153,142 @@ const hourRain = hourlyRain[actualIndex] ?? 0;
           )}
         </div>
       </div>
-
       {/* AQI */}
-      <div className="short-card">
-        <h3>AQI</h3>
-        <p className="large-stat">
-          {airQuality?.aqi ?? "N/A"}
-        </p>
-        <p>{getAqiStatus(airQuality?.aqi)}</p>
+      <div className="short-card expandable-card">
+        <div className="card-default">
+          <h3>AQI</h3>
+          <p className="large-stat">{airQuality?.aqi ?? "N/A"}</p>
+          <p>{getAqiStatus(airQuality?.aqi)}</p>
+        </div>
+
+        <div className="card-expanded">
+          <h3>7 Day AQI Outlook</h3>
+
+          {dailyTime.map((day, i) => (
+            <div key={i} className="expanded-row">
+              <span>{getDayName(day)}</span>
+
+              <span>{airQuality?.aqi ?? "N/A"}</span>
+
+              <span>{getAqiStatus(airQuality?.aqi)}</span>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* UV INDEX */}
-      <div className="short-card">
-        <h3>UV Index</h3>
+      <div className="short-card expandable-card">
+        <div className="card-default">
+          <h3>UV Index</h3>
 
-        <p className="large-stat">
-          {dailyUv[0] ?? "N/A"}
-        </p>
+          <p className="large-stat">
+            {dailyUv[0] ?? "N/A"}
+          </p>
 
-        <p>{getUvLabel(dailyUv[0])}</p>
+          <p>{getUvLabel(dailyUv[0])}</p>
+        </div>
+
+        <div className="card-expanded">
+          <h3>7 Day UV Forecast</h3>
+
+          {dailyTime.map((day, i) => (
+            <div key={i} className="expanded-row">
+              <span>{getDayName(day)}</span>
+
+              <span>{dailyUv[i] ?? "—"}</span>
+
+              <span>{getUvLabel(dailyUv[i])}</span>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* PRECIPITATION */}
-      <div className="short-card">
-        <h3>Precipitation</h3>
+      <div className="short-card expandable-card">
+        <div className="card-default">
+          <h3>Precipitation</h3>
 
-        <div className="grid-substats">
-          <div>
-            <span>Today</span>
-            <strong>
-              {dailyPrecipSum[0] ?? "—"} mm
-            </strong>
-          </div>
+          <div className="grid-substats">
+            <div>
+              <span>Today</span>
+              <strong>
+                {dailyPrecipSum[0] ?? "—"} mm
+              </strong>
+            </div>
 
-          <div>
-            <span>Probability</span>
-            <strong>
-              {dailyPrecipProb[0] ?? "—"}%
-            </strong>
+            <div>
+              <span>Probability</span>
+              <strong>
+                {dailyPrecipProb[0] ?? "—"}%
+              </strong>
+            </div>
           </div>
+        </div>
+
+        <div className="card-expanded">
+          <h3>7 Day Rain Forecast</h3>
+
+          {dailyTime.map((day, i) => (
+            <div key={i} className="expanded-row">
+              <span>{getDayName(day)}</span>
+
+              <span>{dailyPrecipProb[i] ?? "—"}%</span>
+
+              <span>{dailyPrecipSum[i] ?? "—"} mm</span>
+            </div>
+          ))}
         </div>
       </div>
 
       {/* WIND */}
-      <div className="short-card">
-        <h3>Wind</h3>
+      <div className="short-card expandable-card">
+        <div className="card-default">
+          <h3>Wind</h3>
 
-        <div className="grid-substats">
-          <div>
-            <span>Direction</span>
-            <strong>
-              {forecast?.current?.wind_direction_10m ?? "—"}°
-            </strong>
-          </div>
+          <div className="grid-substats">
+            <div>
+              <span>Direction</span>
+              <strong>
+                {forecast?.current?.wind_direction_10m ?? "—"}°
+              </strong>
+            </div>
 
-          <div>
-            <span>Speed</span>
-            <strong>
-              {forecast?.current?.wind_speed_10m ?? "—"} km/h
-            </strong>
-          </div>
+            <div>
+              <span>Speed</span>
+              <strong>
+                {forecast?.current?.wind_speed_10m ?? "—"} km/h
+              </strong>
+            </div>
 
-          <div>
-            <span>Max</span>
-            <strong>
-              {dailyWindMax[0] ?? "—"} km/h
-            </strong>
+            <div>
+              <span>Max</span>
+              <strong>
+                {dailyWindMax[0] ?? "—"} km/h
+              </strong>
+            </div>
           </div>
         </div>
-      </div>
 
+        <div className="card-expanded">
+          <h3>7 Day Wind Forecast</h3>
+
+          {dailyTime.map((day, i) => (
+            <div key={i} className="expanded-row">
+              <span>{getDayName(day)}</span>
+
+              <span>{dailyWindMax[i] ?? "—"} km/h</span>
+
+              <span>
+                {dailyWindMax[i] > 30
+                  ? "Strong"
+                  : dailyWindMax[i] > 15
+                  ? "Moderate"
+                  : "Light"}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

@@ -54,3 +54,65 @@
 .header-btn:active {
   transform: scale(0.97);
 }
+
+
+.account-wrapper {
+  position: relative;
+}
+
+.account-dropdown {
+  position: absolute;
+  top: 52px;
+  right: 0;
+
+  width: 240px;
+
+  background: var(--bg);
+  border: 1px solid var(--border);
+
+  border-radius: 12px;
+
+  padding: 16px;
+
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+
+  z-index: 1000;
+}
+
+.account-label {
+  font-size: 12px;
+  color: var(--text);
+
+  margin: 0 0 8px 0;
+}
+
+.account-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-h);
+
+  margin: 0 0 12px 0;
+
+  word-break: break-word;
+}
+
+.account-action {
+  width: 100%;
+  padding: 10px;
+
+  border: 1px solid var(--border);
+  border-radius: 8px;
+
+  background: var(--bg);
+  color: var(--text-h);
+
+  cursor: pointer;
+  font-size: 14px;
+
+  transition: 0.2s ease;
+}
+
+.account-action:hover {
+  background: var(--accent);
+  color: white;
+}

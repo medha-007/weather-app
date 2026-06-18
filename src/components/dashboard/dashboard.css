@@ -123,3 +123,69 @@
   font-size: 18px;
   color: var(--text-h);
 }
+/* Hover Expand Cards */
+
+.expandable-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 140px;
+  height: 140px;
+  transition: height 0.35s ease;
+}
+
+.expandable-card:hover {
+  height: 380px;
+}
+
+.card-default {
+  transition: opacity 0.25s ease;
+}
+
+.expandable-card:hover .card-default {
+  opacity: 0;
+}
+
+.card-expanded {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+
+  opacity: 0;
+  transform: translateY(15px);
+  transition: all 0.3s ease;
+
+  pointer-events: none;
+}
+
+.expandable-card:hover .card-expanded {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.expanded-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+
+  align-items: center;
+  gap: 12px;
+
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--border);
+
+  font-size: 14px;
+}
+
+.expanded-row span {
+  text-align: center;
+}
+
+.expanded-row span:first-child {
+  text-align: left;
+  font-weight: 500;
+}
+
+.expanded-row span:last-child {
+  text-align: right;
+  font-weight: 500;
+}
