@@ -11,7 +11,7 @@ export default function App() {
   const [savedWeatherList, setSavedWeatherList] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-
+const [recentSearches, setRecentSearches] = useState([]);
   const [searchLoading, setSearchLoading] = useState(false);
 
   const [searchResult, setSearchResult] = useState(null);
@@ -103,6 +103,84 @@ export default function App() {
     );
   };
 
+const isSavedLocation = (city) => {
+  return savedWeatherList.some(
+    (item) => item.city?.toLowerCase() === city?.toLowerCase()
+  );
+};
+
+const handleToggleSave = async () => {
+  if (!user) {
+    alert("Sign in!");
+    return;
+  }
+
+  if (!currentLocation?.city) return;
+
+  const city = currentLocation.city;
+
+  const alreadySaved = isSavedLocation(city);
+
+  try {
+    if (alreadySaved) {
+      const isCurrentLocation =
+        currentLocation?.city === savedWeatherList?.[0]?.city;
+
+      if (isCurrentLocation) {
+        alert("Current location cannot be removed!");
+        return;
+      }
+
+      await fetch("http://localhost:3000/saved", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          uid: user.uid,
+          city,
+        }),
+      });
+
+      setSavedWeatherList((prev) =>
+        prev.filter(
+          (item) =>
+            item.city?.toLowerCase() !== city?.toLowerCase()
+        )
+      );
+
+      alert("removed!");
+    } else {
+      await fetch("http://localhost:3000/saved", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          uid: user.uid,
+          city,
+        }),
+      });
+
+      setSavedWeatherList((prev) => [...prev, currentLocation]);
+        const newIndex = savedWeatherList.length;
+
+setActiveIndex(newIndex);
+setSearchResult(null);
+      alert("saved!");
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+const getSaveIcon = () => {
+  if (!user) return "✢";
+
+  if (!currentLocation?.city) return "☆";
+
+  return isSavedLocation(currentLocation.city) ? "★" : "☆";
+};
+
   // SEARCH
 const handleSearch = async (city) => {
   try {
@@ -114,9 +192,17 @@ const handleSearch = async (city) => {
 
     const data = await res.json();
 
-    if (data && !data.error) {
-      setSearchResult(data);
-    }
+if (data && !data.error) {
+  setRecentSearches((prev) => {
+    const filtered = prev.filter(
+      (item) => item.toLowerCase() !== city.toLowerCase()
+    );
+
+    return [city, ...filtered].slice(0, 5);
+  });
+
+  setSearchResult(data);
+}
   } catch (err) {
     console.error(err);
   } finally {
@@ -147,6 +233,9 @@ const handleSearch = async (city) => {
   onSearch={handleSearch}
   onUseCurrentLocation={handleReturnToCurrentLocation}
   searchLoading={searchLoading}
+  saveIcon={getSaveIcon()}
+  onToggleSave={handleToggleSave}
+  recentSearches={recentSearches}
 />
 
 {searchLoading && (

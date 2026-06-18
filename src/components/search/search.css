@@ -221,3 +221,26 @@
 
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
+
+.recent-searches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.recent-chip {
+  border: 1px solid var(--border);
+  background: var(--social-bg);
+  color: var(--text-h);
+
+  border-radius: 999px;
+  padding: 4px 10px;
+
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.recent-chip:hover {
+  background: var(--accent-bg);
+}

@@ -206,6 +206,28 @@ app.get("/get-saved-locations", async (req, res) => {
   res.json(locations);
 });
 
+app.delete("/saved", async (req, res) => {
+  try {
+    const { uid, city } = req.body;
+
+    await saved.deleteOne({
+      uid,
+      city,
+    });
+
+    res.json({
+      success: true,
+    });
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).json({
+      error: "Failed to remove location",
+    });
+  }
+});
+
+
 app.listen(3000, () => {
   console.log("Server running on port 3000");
 });

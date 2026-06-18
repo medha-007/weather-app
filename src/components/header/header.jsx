@@ -14,8 +14,11 @@ import Search from "../search/Search";
 export default function Header({
   onSearch,
   onUseCurrentLocation,
-  onSavedClick,
-}) {
+  searchLoading,
+  saveIcon,
+  onToggleSave,
+  recentSearches,
+}){
   const [user, setUser] = useState(null);
 
   const accountRef = useRef(null);
@@ -111,6 +114,7 @@ export default function Header({
                 onUseCurrentLocation={() => {
                   onUseCurrentLocation();
                   setShowSearch(false);
+                    recentSearches={recentSearches}
                 }}
                 onClose={() => setShowSearch(false)}
               />
@@ -119,9 +123,9 @@ export default function Header({
         </div>
 
         {/* SAVED */}
-        <button className="header-btn" onClick={onSavedClick}>
-          ⭐
-        </button>
+<button className="header-btn" onClick={onToggleSave}>
+  {saveIcon}
+</button>
 
         {/* ACCOUNT */}
         <div className="account-wrapper" ref={accountRef}>

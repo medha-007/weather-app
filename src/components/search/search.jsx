@@ -4,7 +4,8 @@ import "./search.css";
 export default function Search({
   onSearch,
   onUseCurrentLocation,
-    searchLoading,
+  searchLoading,
+  recentSearches,
 }) {
   const [input, setInput] = useState("");
 
@@ -16,18 +17,15 @@ export default function Search({
     setInput("");
   };
 
-  return (
+return (
   <div className="search-container">
-    <div className="search-row">
 
+    <div className="search-row">
       <input
         className="search-input"
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        placeholder="Search for city..."
-        onKeyDown={(e) => {
-          if (e.key === "Enter") handleSearchClick();
-        }}
+        placeholder="Enter city..."
       />
 
       <button
@@ -45,8 +43,22 @@ export default function Search({
       >
         🏠︎
       </button>
-
     </div>
+
+    {recentSearches?.length > 0 && (
+      <div className="recent-searches">
+        {recentSearches.map((city) => (
+          <button
+            key={city}
+            className="recent-chip"
+            onClick={() => setInput(city)}
+          >
+            {city}
+          </button>
+        ))}
+      </div>
+    )}
+
   </div>
 );
 }
