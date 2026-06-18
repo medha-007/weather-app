@@ -1,0 +1,34 @@
+.theme-default {
+  --weather-bg: #ffffff;
+  --weather-accent: #aa3bff;
+}
+
+.theme-sunny {
+  --weather-bg: #eaf6ff;
+  --weather-accent: #4aa9ff;
+}
+
+.theme-cloudy {
+  --weather-bg: #f1f3f5;
+  --weather-accent: #8b95a5;
+}
+
+.theme-cloudy-dark {
+  --weather-bg: #dfe3e8;
+  --weather-accent: #5f6977;
+}
+
+.theme-rain {
+  --weather-bg: #dde8f5;
+  --weather-accent: #4f77a8;
+}
+
+.theme-sunset {
+  --weather-bg: #ffe8ef;
+  --weather-accent: #ff7a9a;
+}
+
+.theme-night {
+  --weather-bg: #1e2330;
+  --weather-accent: #7a92ff;
+}

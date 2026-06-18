@@ -5,6 +5,8 @@ import { getSavedLocations } from "./services/weatherService";
 import { getCurrentPosition } from "./services/locationService";
 import Header from "./components/header/Header";
 import Dashboard from "./components/dashboard/Dashboard";
+import { getWeatherTheme } from "./theme/weatherTheme";
+import "./theme/weatherTheme.css";
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -236,6 +238,25 @@ if (data && !data.error) {
     ? savedWeatherList[safeIndex]
     : null;
 
+    const weatherTheme =
+  getWeatherTheme(currentLocation);
+
+useEffect(() => {
+  if (!currentLocation) return;
+
+  const theme = getWeatherTheme(currentLocation);
+
+  document.documentElement.style.setProperty(
+    "--weather-bg",
+    theme.bg
+  );
+
+  document.documentElement.style.setProperty(
+    "--weather-accent",
+    theme.accent
+  );
+}, [currentLocation]);
+
 
 useEffect(() => {
   const loadRecentSearches = async () => {
@@ -257,7 +278,7 @@ useEffect(() => {
 
 
   return (
-    <div className="app-layout">
+<div className={`app-layout ${weatherTheme}`}>
 <Header
   onSearch={handleSearch}
   onUseCurrentLocation={handleReturnToCurrentLocation}
