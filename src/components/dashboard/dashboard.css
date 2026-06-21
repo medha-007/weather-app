@@ -11,13 +11,21 @@
 
 /* Base structural short version container */
 .short-card {
-  background: var(--bg);
-  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.15);
+
+  backdrop-filter: blur(20px);
+
+  border: 1px solid rgba(255,255,255,0.18);
+
   border-radius: 12px;
+
   padding: 20px;
+
   box-shadow: var(--shadow);
-  text-align: left;
-  box-sizing: border-box;
+
+  transition:
+    background 1s ease,
+    border-color 1s ease;
 }
 
 .short-card h3 {

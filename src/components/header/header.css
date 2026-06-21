@@ -4,11 +4,17 @@
   align-items: center;
 
   padding: 15px 25px;
-  /* Use index.css theme background and border tokens */
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
+
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+
+  border-bottom: 1px solid rgba(255,255,255,0.15);
 
   font-family: var(--sans);
+
+  transition:
+    background 1s ease,
+    border-color 1s ease;
 }
 
 /* LEFT */
