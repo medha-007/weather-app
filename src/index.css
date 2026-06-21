@@ -2,7 +2,7 @@
 
 :root {
   --text: #6b6375;
-  --text-h: #08060d;
+  --text-h: #ffffff;
 
   --bg: #ffffff;
   --border: #e5e4e7;
@@ -38,8 +38,8 @@
 
 --weather-bg: linear-gradient(
   180deg,
-  #8ec5ff 0%,
-  #c8e3ff 100%
+  #2e4967 0%,
+  #09284a 100%
 );
 
 --weather-card: rgba(255, 255, 255, 0.15);
@@ -160,15 +160,10 @@ code {
 /* MAIN DASHBOARD */
 
 .dashboard-container {
-  max-width: 800px;
-  width: 100%;
-
+  width: min(1300px, 95vw);
   margin: 0 auto;
-  padding: 24px 16px;
-
-  box-sizing: border-box;
+  padding: 24px;
 }
-
 .switcher-zone {
   display: flex;
   align-items: center;
@@ -200,11 +195,43 @@ code {
 }
 
 .hero-carousel {
-  margin-top: 45px;
+  margin-top: 40px;
 }
 
+
+.carousel-wrapper {
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+
+.hero-carousel {
+  transition: all 0.4s ease;
+}
+
+.carousel-wrapper {
+  width: 420px;
+  margin: 0 auto;
+}
+
+.carousel-wrapper.expanded {
+  width: 100%;
+}
 .hero-carousel::-webkit-scrollbar {
   display: none;
+}
+
+
+.carousel-blur {
+  position: absolute;
+
+  top: 0;
+  bottom: 0;
+
+  width: 300px;
+
+  z-index: 10;
+
+  pointer-events: none;
 }
 
 .hero-card {
@@ -301,3 +328,6 @@ code {
 }
 
 
+.dashboard-spacer {
+  height: 190px;
+}

@@ -1,9 +1,9 @@
 .header {
   position: fixed;
 
-  top: 20px;
-  left: 20px;
-  right: 20px;
+  top: 30px;
+  left: 40px;
+  right: 40px;
 
   display: flex;
   justify-content: space-between;

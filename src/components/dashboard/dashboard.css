@@ -1,39 +1,45 @@
-/* Master stacked container */
+/* Master Grid Layout setup: 3 columns total */
 .dashboard-stack {
   display: flex;
-  flex-direction: column;
   gap: 16px;
-  width: 100%;
-  max-width: 600px; /* Kept compact to hold a tight column look */
-  margin: 0 auto;
-  box-sizing: border-box;
+  max-width: 500px;
+  margin: 150px auto 0 auto;
+  padding: 0 40px;
+}
+/* Explicit layout column spans */
+
+/* Base Structural premium glass card styling */
+.short-card {
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
+  transition: 
+    background 0.3s ease, 
+    border-color 0.3s ease, 
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.3s ease,
+    height 0.35s ease; /* Integrated height change directly for clarity */
 }
 
-/* Base structural short version container */
-.short-card {
-  background: rgba(255, 255, 255, 0.15);
-
-  backdrop-filter: blur(20px);
-
-  border: 1px solid rgba(255,255,255,0.18);
-
-  border-radius: 12px;
-
-  padding: 20px;
-
-  box-shadow: var(--shadow);
-
-  transition:
-    background 1s ease,
-    border-color 1s ease;
+.short-card:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.22);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.35);
 }
 
 .short-card h3 {
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin: 0 0 12px 0;
+  letter-spacing: 0.8px;
+  margin: 0 0 16px 0;
   color: var(--text);
+  opacity: 0.8;
 }
 
 /* Hourly Row Flow */
@@ -41,19 +47,29 @@
   display: flex;
   gap: 20px;
   overflow-x: auto;
+  overflow-y: hidden;
   padding-bottom: 8px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-behavior: smooth;
+}
+
+.hourly-row::-webkit-scrollbar {
+  display: none;
 }
 
 .hourly-item {
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex: 0 0 auto;
   min-width: 70px;
 }
 
 .hourly-item .time {
   font-size: 14px;
   color: var(--text);
+  opacity: 0.8;
 }
 
 .hourly-item .temp {
@@ -63,25 +79,20 @@
   margin: 4px 0;
 }
 
-.hourly-item .rain-metric {
-  font-size: 12px;
-  color: var(--accent);
-}
-
 /* Daily List Layout */
 .daily-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .daily-row-item {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1.2fr 1.5fr 0.8fr; /* Structured alignment instead of loose flex distribution */
   align-items: center;
   font-size: 15px;
-  border-bottom: 1px dashed var(--border);
-  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 10px;
 }
 
 .daily-row-item:last-child {
@@ -92,16 +103,16 @@
 .daily-row-item .weekday {
   font-weight: 500;
   color: var(--text-h);
-  width: 100px;
 }
 
 /* Highlighted Stat Configurations */
 .large-stat {
-  font-size: 38px;
+  font-size: 42px;
   font-weight: 600;
   color: var(--text-h);
   margin: 4px 0;
-  line-height: 1;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
 }
 
 .sub-label {
@@ -110,10 +121,11 @@
   font-weight: 500;
 }
 
-/* Clean grid structures inside cards */
+/* Clean substat row alignments */
 .grid-substats {
   display: flex;
-  gap: 30px;
+  gap: 24px;
+  margin-top: 8px;
 }
 
 .grid-substats div {
@@ -124,76 +136,149 @@
 .grid-substats .label {
   font-size: 12px;
   color: var(--text);
-  margin-bottom: 2px;
+  opacity: 0.7;
+  margin-bottom: 4px;
 }
 
 .grid-substats strong {
   font-size: 18px;
   color: var(--text-h);
+  font-weight: 600;
 }
-/* Hover Expand Cards */
 
+/* Hover Expand Interaction Animations */
 .expandable-card {
   position: relative;
   overflow: hidden;
-  min-height: 140px;
-  height: 140px;
-  transition: height 0.35s ease;
+  min-height: 150px;
+  height: 150px;
 }
 
 .expandable-card:hover {
-  height: 380px;
+  height: 354px;
 }
 
 .card-default {
-  transition: opacity 0.25s ease;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .expandable-card:hover .card-default {
   opacity: 0;
+  transform: translateY(-10px);
 }
 
 .card-expanded {
   position: absolute;
-  top: 20px;
-  left: 20px;
-  right: 20px;
-
+  top: 24px;
+  left: 24px;
+  right: 24px;
   opacity: 0;
   transform: translateY(15px);
-  transition: all 0.3s ease;
-
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
 }
 
 .expandable-card:hover .card-expanded {
   opacity: 1;
   transform: translateY(0);
+  pointer-events: auto;
 }
 
 .expanded-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-
+  grid-template-columns: 1.2fr 0.8fr 1fr;
   align-items: center;
-  gap: 12px;
-
-  padding: 8px 0;
-  border-bottom: 1px dashed var(--border);
-
+  gap: 8px;
+  padding: 10px 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
   font-size: 14px;
 }
 
-.expanded-row span {
-  text-align: center;
+.expanded-row:last-child {
+  border-bottom: none;
 }
 
-.expanded-row span:first-child {
-  text-align: left;
-  font-weight: 500;
+.expanded-row span:nth-child(2) {
+  text-align: center;
 }
 
 .expanded-row span:last-child {
   text-align: right;
   font-weight: 500;
 }
+
+/* Fluid responsive breakdown */
+@media (max-width: 1024px) {
+  .dashboard-stack {
+    grid-template-columns: repeat(2, 1fr); /* 2-column fallback layout for smaller tablets */
+  }
+  .hourly-card, .weekly-card {
+    grid-column: span 2;
+  }
+  .aqi-card, .uv-card, .precip-card, .wind-card {
+    grid-column: span 1;
+  }
+}
+
+@media (max-width: 734px) {
+  .dashboard-stack {
+    grid-template-columns: 1fr; /* 1-column layout for mobile */
+    gap: 16px;
+    padding: 12px;
+  }
+  .hourly-card, .weekly-card, .aqi-card, .uv-card, .precip-card, .wind-card {
+    grid-column: span 1;
+  }
+}
+
+/* Container holds the 3 columns side-by-side */
+.dashboard-stack {
+  display: grid;
+  grid-template-columns: 1.8fr 1fr 1fr;
+  gap: 24px;
+
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+/* Each column stacks its own cards tightly, top-to-bottom */
+.dashboard-col {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+ 
+  min-width: 0; /* Prevents overflow blowout */
+}
+
+/* Individual card overrides (unclamps widths) */
+.short-card {
+  width: 100%;
+  max-width: 100%;
+}
+
+.hourly-card{
+  grid-column: 2; 
+  width: 100%;        
+  max-width: 500px;
+  max-height: 160px;
+}
+
+.weekly-card {
+  grid-column: 2; 
+  width: 100%;        
+  max-width: 500px;
+  max-height: 550px;
+}
+
+.aqi-card,
+.uv-card{
+  grid-column: 1;
+    max-width: 260px;
+}
+
+.precip-card,
+.wind-card {
+  grid-column: 3;
+    max-width: 260px;
+}
+

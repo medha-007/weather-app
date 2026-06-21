@@ -9,6 +9,7 @@ import Dashboard from "./components/dashboard/Dashboard";
 import { getWeatherTheme } from "./theme/weatherTheme";
 import "./theme/weatherTheme.css";
 import { useRef } from "react";
+import GradualBlur from './GradualBlur/GradualBlur';
 //import { motion, AnimatePresence } from "motion/react";
 
 export default function App() {
@@ -18,6 +19,7 @@ export default function App() {
 const [recentSearches, setRecentSearches] = useState([]);
   const [searchLoading, setSearchLoading] = useState(false);
   const carouselRef = useRef(null);
+  const [carouselHovered, setCarouselHovered] = useState(false);
 
   const [searchResult, setSearchResult] = useState(null);
   const [activeCity, setActiveCity] = useState(null);
@@ -322,7 +324,7 @@ useEffect(() => {
   savedLocations={savedWeatherList}
 
 />
-
+   <div className="dashboard-spacer"></div>
 {searchLoading && (
   <div className="global-search-loading">
     Searching weather...
@@ -335,7 +337,16 @@ useEffect(() => {
           </div>
         ) : (
           <>
-<section
+
+
+<div
+  className={`carousel-wrapper ${
+    carouselHovered ? "expanded" : ""
+  }`}
+  onMouseEnter={() => setCarouselHovered(true)}
+  onMouseLeave={() => setCarouselHovered(false)}
+>
+          <section
   className="hero-carousel"
   ref={carouselRef}
 >
@@ -346,18 +357,21 @@ useEffect(() => {
         data-city={location.city}
 
       className="hero-card"
-      animate={{
+animate={{
   scale:
     activeCity === location.city
       ? 1
-      : 0.92,
+      : carouselHovered
+      ? 0.92
+      : 0.75,
 
   opacity:
     activeCity === location.city
       ? 1
-      : 0.6,
+      : carouselHovered
+      ? 0.6
+      : 0,
 }}
-
 transition={{
   type: "spring",
   stiffness: 250,
@@ -404,9 +418,12 @@ transition={{
 
   ))}
 
-</section>
+          </section>
+          </div>
 
-            {!isLoading && currentLocation && (
+          <div className="dashboard-spacer"></div>
+
+           {!isLoading && currentLocation && (
               <Dashboard currentLocation={currentLocation} />
             )}
           </>
