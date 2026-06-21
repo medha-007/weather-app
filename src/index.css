@@ -148,7 +148,9 @@ code {
 }
 
 .app-layout {
+
   min-height: 100vh;
+  position: relative;
 
   background: var(--weather-bg);
 
@@ -329,5 +331,18 @@ code {
 
 
 .dashboard-spacer {
-  height: 190px;
+  height: 270px;
+}
+
+.grainient-bg {
+  position: fixed;
+  inset: 0;
+
+  width: 100vw;
+  height: 100vh;
+
+  z-index: -1;
+
+  overflow: hidden;
+  pointer-events: none;
 }

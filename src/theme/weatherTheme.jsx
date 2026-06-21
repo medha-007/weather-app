@@ -1,8 +1,15 @@
 export function getWeatherTheme(weather) {
-  if (!weather) return {};
+  if (!weather) {
+    return {
+      accent: "#4f9cff",
+
+      grain1: "#FF9FFC",
+      grain2: "#5227FF",
+      grain3: "#B497CF",
+    };
+  }
 
   const current = weather.forecast?.current;
-  const daily = weather.forecast?.daily;
 
   const cloudCover = current?.cloud_cover ?? 0;
   const precipitation = current?.precipitation ?? 0;
@@ -14,57 +21,85 @@ export function getWeatherTheme(weather) {
   const isSunrise = hour >= 5 && hour <= 7;
   const isSunset = hour >= 17 && hour <= 19;
 
-  // SUNRISE
+  /* SUNRISE */
+
   if (isSunrise) {
     return {
-      bg: "linear-gradient(180deg,#ffd7b0 0%,#ffc9a9 35%,#d6b3ff 100%)",
       accent: "#9b4f00",
+
+      grain1: "#d849b0",
+      grain2: "#f4d78e",
+      grain3: "#b768e5",
     };
   }
 
-  // SUNSET
+  /* SUNSET */
+
   if (isSunset) {
     return {
-      bg: "linear-gradient(180deg,#ffb38a 0%,#d88cb8 45%,#5960a8 100%)",
       accent: "#7b2559",
+
+      grain1: "#ffdc8a",
+      grain2: "#d164a4",
+      grain3: "#8159a8",
     };
   }
 
-  // NIGHT
+  /* NIGHT */
+
   if (!isDay) {
     return {
-      bg: "linear-gradient(180deg,#0d1b2a 0%,#1b263b 100%)",
       accent: "#6ea8ff",
+
+      grain1: "#0D1B2A",
+      grain2: "#1B263B",
+      grain3: "#304A6E",
     };
   }
 
-  // RAIN
+  /* RAIN */
+
   if (precipitation > 0.5) {
     return {
-      bg: "linear-gradient(180deg,#53697f 0%,#74869a 100%)",
-      accent: "#18374d",
+      accent: "#73C7FF",
+
+      grain1: "#587289",
+      grain2: "#495768",
+      grain3: "#3a444d",
     };
   }
 
-  // VERY CLOUDY
+  /* VERY CLOUDY */
+
   if (cloudCover > 75) {
     return {
-      bg: "linear-gradient(180deg,#596779 0%,#7a8797 100%)",
-      accent: "#263544",
+      accent: "#B8D3FF",
+
+      grain1: "#324f74",
+      grain2: "#50647c",
+      grain3: "#414c56",
     };
   }
 
-  // PARTLY CLOUDY
+  /* PARTLY CLOUDY */
+
   if (cloudCover > 35) {
     return {
-      bg: "linear-gradient(180deg,#8d9cad 0%,#b8c2cf 100%)",
-      accent: "#43546b",
+      accent: "#43546B",
+
+      grain1: "#556a81",
+      grain2: "#8fa0b7",
+      grain3: "#8e96a3",
     };
   }
 
-  // SUNNY
+  /* SUNNY */
+
   return {
-    bg: "linear-gradient(180deg,#8ec5ff 0%,#c8e3ff 100%)",
-    accent: "#2459a8",
+    accent: "#2459A8",
+
+    grain1: "#7499c1",
+    grain2: "#57a7b4",
+    grain3: "#2373db",
   };
 }

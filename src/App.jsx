@@ -10,6 +10,8 @@ import { getWeatherTheme } from "./theme/weatherTheme";
 import "./theme/weatherTheme.css";
 import { useRef } from "react";
 import GradualBlur from './GradualBlur/GradualBlur';
+import GlassSurface from "./components/glass/glass";
+import Grainient from "./granient/granient";
 //import { motion, AnimatePresence } from "motion/react";
 
 export default function App() {
@@ -313,7 +315,18 @@ useEffect(() => {
 
 
   return (
-<div className={`app-layout ${weatherTheme}`}>
+    
+<div className={`app-layout`}>
+  <div className="grainient-bg">
+    <Grainient
+      color1={weatherTheme.grain1}
+      color2={weatherTheme.grain2}
+      color3={weatherTheme.grain3}
+         timeSpeed={1}
+             warpFrequency={7}
+    warpSpeed={5}
+    />
+  </div>
 <Header
   onSearch={handleSearch}
   onUseCurrentLocation={handleReturnToCurrentLocation}
@@ -410,7 +423,7 @@ transition={{
             ? "Rainy"
             : (location?.forecast?.current?.cloud_cover ?? 0) > 50
             ? "Cloudy"
-            : "Sunny"}
+            : "Clear"}
         </p>
 
       </div>
@@ -428,6 +441,12 @@ transition={{
             )}
           </>
         )}
+        <GradualBlur
+  position="bottom"
+  strength={1}
+  target = "page"
+  height="70px"
+/>
       </main>
     </div>
   );

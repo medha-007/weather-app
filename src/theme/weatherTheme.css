@@ -1,34 +1,88 @@
-.theme-default {
-  --weather-bg: #ffffff;
-  --weather-accent: #aa3bff;
-}
+/* SUNNY */
 
 .theme-sunny {
-  --weather-bg: #eaf6ff;
-  --weather-accent: #4aa9ff;
+  --weather-accent: #ffd54a;
+
+  --text-h: #ffffff;
+  --text: rgba(255,255,255,0.8);
+
+  --glass-bg: rgba(255,255,255,0.08);
+  --glass-border: rgba(255,255,255,0.15);
+
+  --condition-color: #ffd54a;
 }
+
+
+/* CLOUDY */
 
 .theme-cloudy {
-  --weather-bg: #f1f3f5;
-  --weather-accent: #8b95a5;
+  --weather-accent: #b8d3ff;
+
+  --text-h: #ffffff;
+  --text: rgba(255,255,255,0.78);
+
+  --glass-bg: rgba(255,255,255,0.08);
+  --glass-border: rgba(255,255,255,0.12);
+
+  --condition-color: #8fa2c1;
 }
+
+
+/* CLOUDY DARK */
 
 .theme-cloudy-dark {
-  --weather-bg: #dfe3e8;
-  --weather-accent: #5f6977;
+  --weather-accent: #8fa6c5;
+
+  --text-h: #ffffff;
+  --text: rgba(255,255,255,0.75);
+
+  --glass-bg: rgba(255,255,255,0.07);
+  --glass-border: rgba(255,255,255,0.10);
+
+  --condition-color: #5d7391;
 }
+
+
+/* RAIN */
 
 .theme-rain {
-  --weather-bg: #dde8f5;
-  --weather-accent: #4f77a8;
+  --weather-accent: #73c7ff;
+
+  --text-h: #ffffff;
+  --text: rgba(255,255,255,0.75);
+
+  --glass-bg: rgba(255,255,255,0.06);
+  --glass-border: rgba(255,255,255,0.10);
+
+  --condition-color: #73c7ff;
 }
+
+
+/* SUNSET */
 
 .theme-sunset {
-  --weather-bg: #ffe8ef;
-  --weather-accent: #ff7a9a;
+  --weather-accent: #ff9e8a;
+
+  --text-h: #ffffff;
+  --text: rgba(255,255,255,0.82);
+
+  --glass-bg: rgba(255,255,255,0.10);
+  --glass-border: rgba(255,255,255,0.18);
+
+  --condition-color: #ffb38a;
 }
 
+
+/* NIGHT */
+
 .theme-night {
-  --weather-bg: #1e2330;
-  --weather-accent: #7a92ff;
+  --weather-accent: #9d8cff;
+
+  --text-h: #ffffff;
+  --text: rgba(255,255,255,0.72);
+
+  --glass-bg: rgba(255,255,255,0.05);
+  --glass-border: rgba(255,255,255,0.08);
+
+  --condition-color: #9d8cff;
 }
