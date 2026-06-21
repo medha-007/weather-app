@@ -90,9 +90,9 @@ const [showRecentList, setShowRecentList] = useState(false);
   return (
     <header className="header">
       {/* LEFT */}
-      <div className="header-left">
-        <h1 className="logo">Weather App</h1>
-      </div>
+<div className="app-badge">
+  Weather App
+</div>
 
       <div className="header-center" />
 

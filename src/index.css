@@ -199,6 +199,10 @@ code {
   box-sizing: border-box;
 }
 
+.hero-carousel {
+  margin-top: 45px;
+}
+
 .hero-carousel::-webkit-scrollbar {
   display: none;
 }
