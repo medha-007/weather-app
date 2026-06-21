@@ -179,11 +179,36 @@ code {
   margin-bottom: 32px;
 }
 
-/* HERO */
+/* HERO CAROUSEL */
+
+.hero-carousel {
+  display: flex;
+  gap: 20px;
+
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  padding-left: calc(50% - 210px);
+  padding-right: calc(50% - 210px);
+  padding-bottom: 20px;
+
+  box-sizing: border-box;
+}
+
+.hero-carousel::-webkit-scrollbar {
+  display: none;
+}
 
 .hero-card {
-  background: rgba(255, 255, 255, 0.15);
+  flex: 0 0 420px;
 
+  scroll-snap-align: center;
+
+  background: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(0, 0, 0, 0.08);
 
   backdrop-filter: blur(20px);
@@ -191,10 +216,8 @@ code {
   box-shadow: var(--shadow);
 
   border-radius: 18px;
-
   padding: 24px;
 
-  width: 100%;
   max-width: 420px;
 
   text-align: left;
@@ -272,3 +295,5 @@ code {
 
   margin-top: 20px;
 }
+
+

@@ -1,3 +1,4 @@
+import { motion } from "motion/react";
 import { useState, useEffect } from "react";
 import { auth } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -7,16 +8,28 @@ import Header from "./components/header/Header";
 import Dashboard from "./components/dashboard/Dashboard";
 import { getWeatherTheme } from "./theme/weatherTheme";
 import "./theme/weatherTheme.css";
+import { useRef } from "react";
+//import { motion, AnimatePresence } from "motion/react";
 
 export default function App() {
   const [user, setUser] = useState(null);
   const [savedWeatherList, setSavedWeatherList] = useState([]);
-  const [activeIndex, setActiveIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 const [recentSearches, setRecentSearches] = useState([]);
   const [searchLoading, setSearchLoading] = useState(false);
+  const carouselRef = useRef(null);
 
   const [searchResult, setSearchResult] = useState(null);
+  const [activeCity, setActiveCity] = useState(null);
+
+const heroLocations = searchResult
+  ? [searchResult]
+  : savedWeatherList;
+
+const currentLocation =
+  heroLocations.find(
+    (loc) => loc.city === activeCity
+  ) || heroLocations[0];
 
   // AUTH LISTENER
   useEffect(() => {
@@ -27,6 +40,16 @@ const [recentSearches, setRecentSearches] = useState([]);
     return unsubscribe;
   }, []);
 
+useEffect(() => {
+  if (heroLocations.length > 0) {
+    setActiveCity(heroLocations[0]?.city);
+    // Scroll carousel back to first card when locations change
+    if (carouselRef.current) {
+      carouselRef.current.scrollLeft = 0;
+    }
+  }
+}, [heroLocations.length]); // depend on length, not the array object
+  
   // LOAD WEATHER DATA
   useEffect(() => {
     const loadAllDashboardData = async () => {
@@ -83,27 +106,8 @@ const [recentSearches, setRecentSearches] = useState([]);
     loadAllDashboardData();
   }, [user]);
 
-  // RESET INDEX WHEN LIST CHANGES
-  useEffect(() => {
-    setActiveIndex(0);
-  }, [savedWeatherList.length]);
 
-  // NAVIGATION
-  const handleNext = () => {
-    if (savedWeatherList.length === 0 || searchResult) return;
 
-    setActiveIndex((prev) => (prev + 1) % savedWeatherList.length);
-  };
-
-  const handlePrev = () => {
-    if (savedWeatherList.length === 0 || searchResult) return;
-
-    setActiveIndex(
-      (prev) =>
-        (prev - 1 + savedWeatherList.length) %
-        savedWeatherList.length
-    );
-  };
 
 const isSavedLocation = (city) => {
   return savedWeatherList.some(
@@ -165,9 +169,7 @@ const handleToggleSave = async () => {
       });
 
       setSavedWeatherList((prev) => [...prev, currentLocation]);
-        const newIndex = savedWeatherList.length;
 
-setActiveIndex(newIndex);
 setSearchResult(null);
       alert("saved!");
     }
@@ -223,20 +225,9 @@ if (data && !data.error) {
   // EXIT SEARCH MODE
   const handleReturnToCurrentLocation = () => {
     setSearchResult(null);
-    setActiveIndex(0);
   };
 
-  // SAFE CURRENT LOCATION
-  const safeIndex =
-    savedWeatherList.length > 0
-      ? activeIndex % savedWeatherList.length
-      : 0;
 
-  const currentLocation = searchResult
-    ? searchResult
-    : savedWeatherList.length > 0
-    ? savedWeatherList[safeIndex]
-    : null;
 
     const weatherTheme =
   getWeatherTheme(currentLocation);
@@ -257,7 +248,49 @@ useEffect(() => {
   );
 }, [currentLocation]);
 
+useEffect(() => {
+  const carousel = carouselRef.current;
+  if (!carousel) return;
 
+  let rafId;
+
+const handleScroll = () => {
+  cancelAnimationFrame(rafId);
+  rafId = requestAnimationFrame(() => {
+    const viewportCenter = carousel.scrollLeft + carousel.clientWidth / 2;
+
+    let closest = null;
+    let closestDistance = Infinity;
+
+    carousel.querySelectorAll(".hero-card").forEach((card) => {
+      // offsetLeft includes the padding, so use getBoundingClientRect instead
+      const cardRect = card.getBoundingClientRect();
+      const carouselRect = carousel.getBoundingClientRect();
+      
+      // Card center relative to carousel's scroll position
+      const cardCenter =
+        cardRect.left - carouselRect.left + carousel.scrollLeft + cardRect.width / 2;
+
+      const distance = Math.abs(viewportCenter - cardCenter);
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closest = card;
+      }
+    });
+
+    if (closest) {
+      setActiveCity(closest.dataset.city);
+    }
+  });
+};
+  carousel.addEventListener("scroll", handleScroll);
+  handleScroll();
+
+  return () => {
+    carousel.removeEventListener("scroll", handleScroll);
+    cancelAnimationFrame(rafId);
+  };
+}, [heroLocations]);
 useEffect(() => {
   const loadRecentSearches = async () => {
     try {
@@ -302,57 +335,76 @@ useEffect(() => {
           </div>
         ) : (
           <>
-            <section className="switcher-zone">
-{!searchResult && savedWeatherList.length > 1 && (
-  <button className="carousel-btn" onClick={handlePrev}>
-    ←
-  </button>
-)}
+<section
+  className="hero-carousel"
+  ref={carouselRef}
+>
+  {heroLocations.map((location) => (
 
-              <div className="hero-card">
-                {currentLocation ? (
-                  <>
-                    <h2>{currentLocation?.city || "Unknown Location"}</h2>
+    <motion.div
+      key={location.city}
+        data-city={location.city}
 
-                    <h1>
-                      {currentLocation?.forecast?.current?.temperature_2m !==
-                      undefined
-                        ? `${currentLocation.forecast.current.temperature_2m}°C`
-                        : "--°C"}
-                    </h1>
+      className="hero-card"
+      animate={{
+  scale:
+    activeCity === location.city
+      ? 1
+      : 0.92,
 
-                    <div className="hero-subinfo">
-                      <span>
-                        H:{" "}
-                        {currentLocation?.forecast?.daily
-                          ?.temperature_2m_max?.[0] ?? "--"}
-                        °C / L:{" "}
-                        {currentLocation?.forecast?.daily
-                          ?.temperature_2m_min?.[0] ?? "--"}
-                        °C
-                      </span>
+  opacity:
+    activeCity === location.city
+      ? 1
+      : 0.6,
+}}
 
-                      <p className="condition-text">
-                        {currentLocation?.forecast?.current?.precipitation > 0
-                          ? "Rainy"
-                          : (currentLocation?.forecast?.current?.cloud_cover ??
-                              0) > 50
-                          ? "Cloudy"
-                          : "Sunny"}
-                      </p>
-                    </div>
-                  </>
-                ) : (
-                  <div>Loading weather...</div>
-                )}
-              </div>
+transition={{
+  type: "spring",
+  stiffness: 250,
+  damping: 25,
+}}
+    >
+      <h2>{location.city || "Unknown Location"}</h2>
 
-{!searchResult && savedWeatherList.length > 1 && (
-  <button className="carousel-btn" onClick={handleNext}>
-    →
-  </button>
-)}
-            </section>
+      <h1>
+        {location?.forecast?.current?.temperature_2m !==
+        undefined
+          ? `${location.forecast.current.temperature_2m}°C`
+          : "--°C"}
+      </h1>
+
+      <div className="hero-subinfo">
+
+        <span>
+          H:
+          {" "}
+          {location?.forecast?.daily
+            ?.temperature_2m_max?.[0] ?? "--"}
+          °C
+
+          /
+
+          L:
+          {" "}
+          {location?.forecast?.daily
+            ?.temperature_2m_min?.[0] ?? "--"}
+          °C
+        </span>
+
+        <p className="condition-text">
+          {location?.forecast?.current?.precipitation > 0
+            ? "Rainy"
+            : (location?.forecast?.current?.cloud_cover ?? 0) > 50
+            ? "Cloudy"
+            : "Sunny"}
+        </p>
+
+      </div>
+    </motion.div>
+
+  ))}
+
+</section>
 
             {!isLoading && currentLocation && (
               <Dashboard currentLocation={currentLocation} />
