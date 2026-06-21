@@ -219,7 +219,7 @@
 
   border-radius: 10px;
 
-  background: var(255,255,255,0.7);
+  background: rgba(255,255,255,0.7);
   border: 1px solid var(--border);
 
   font-size: 13px;
