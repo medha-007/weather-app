@@ -66,7 +66,7 @@ useEffect(() => {
           const lon = position.coords.longitude;
 
           const gpsRes = await fetch(
-            `http://localhost:3000/weather?lat=${lat}&lon=${lon}`
+            `https://weather-app6-mo3z.onrender.com/weather?lat=${lat}&lon=${lon}`
           );
 
           const gpsData = await gpsRes.json();
@@ -84,7 +84,7 @@ useEffect(() => {
           if (savedMetaData?.length > 0) {
             const dbPromises = savedMetaData.map(async (item) => {
               const res = await fetch(
-                `http://localhost:3000/weather?city=${item.city}`
+                `https://weather-app6-mo3z.onrender.com/weather?city=${item.city}`
               );
               return res.json();
             });
@@ -141,7 +141,7 @@ const handleToggleSave = async () => {
         return;
       }
 
-      await fetch("http://localhost:3000/saved", {
+      await fetch("https://weather-app6-mo3z.onrender.com/saved", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -161,7 +161,7 @@ const handleToggleSave = async () => {
 
       alert("removed!");
     } else {
-      await fetch("http://localhost:3000/saved", {
+      await fetch("https://weather-app6-mo3z.onrender.com/saved", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -195,7 +195,7 @@ const handleSearch = async (city) => {
     setSearchLoading(true);
 
     const res = await fetch(
-      `http://localhost:3000/weather?city=${encodeURIComponent(city)}`
+      `https://weather-app6-mo3z.onrender.com/weather?city=${encodeURIComponent(city)}`
     );
 
     const data = await res.json();
@@ -299,7 +299,7 @@ useEffect(() => {
   const loadRecentSearches = async () => {
     try {
       const res = await fetch(
-        "http://localhost:3000/recent-searches"
+        "https://weather-app6-mo3z.onrender.com/recent-searches"
       );
 
       const data = await res.json();

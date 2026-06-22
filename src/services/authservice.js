@@ -21,7 +21,7 @@ export async function loginUser() {
   const user = result.user;
 
   await fetch(
-    "http://localhost:3000/login",
+    "https://weather-app6-mo3z.onrender.com/login",
     {
       method: "POST",
       headers: {

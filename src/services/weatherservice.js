@@ -1,6 +1,6 @@
 export async function fetchWeatherByCity(city) {
   const res = await fetch(
-    `http://localhost:3000/weather?city=${city}`
+    `https://weather-app6-mo3z.onrender.com/weather?city=${city}`
   );
 
   return await res.json();
@@ -8,7 +8,7 @@ export async function fetchWeatherByCity(city) {
 
 export async function fetchWeatherByCoords(lat, lon) {
   const res = await fetch(
-    `http://localhost:3000/weather?lat=${lat}&lon=${lon}`
+    `https://weather-app6-mo3z.onrender.com/weather?lat=${lat}&lon=${lon}`
   );
 
   return await res.json();
@@ -16,7 +16,7 @@ export async function fetchWeatherByCoords(lat, lon) {
 
 export async function saveLocationToDatabase(uid, city) {
   return await fetch(
-    "http://localhost:3000/saved",
+    "https://weather-app6-mo3z.onrender.com/saved",
     {
       method: "POST",
       headers: {
@@ -32,7 +32,7 @@ export async function saveLocationToDatabase(uid, city) {
 
 export async function getSavedLocations(uid) {
   const res = await fetch(
-    `http://localhost:3000/get-saved-locations?uid=${uid}`
+    `https://weather-app6-mo3z.onrender.com/get-saved-locations?uid=${uid}`
   );
 
   return await res.json();
@@ -40,7 +40,7 @@ export async function getSavedLocations(uid) {
 
 export async function getRecentSearches() {
   const res = await fetch(
-    "http://localhost:3000/recent-searches"
+    "https://weather-app6-mo3z.onrender.com/recent-searches"
   );
 
   return await res.json();
